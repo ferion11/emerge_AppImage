@@ -39,6 +39,9 @@ chmod +x "${WORKDIR}"/emerge.sh
 
 rm -rf ${WORKDIR}/var
 mkdir -p ${WORKDIR}/var
+
+mkdir -p ${WORKDIR}/usr/src/linux
+mkdir -p ${WORKDIR}/lib/modules
 #=================================================
 
 wget -nv -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" -O  appimagetool.AppImage
