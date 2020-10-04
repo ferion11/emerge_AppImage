@@ -32,6 +32,7 @@ EOF
 cat > "${WORKDIR}"/emerge.sh << EOF
 #!/bin/bash
 source /etc/profile
+export ACCEPT_LICENSE="*"
 emerge --root=/mnt/host --config-root=/mnt/host \$@
 EOF
 
