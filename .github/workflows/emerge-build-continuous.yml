@@ -1,4 +1,4 @@
-name: wine-build-continuous
+name: emerge-build-continuous
 
 on:
   push:

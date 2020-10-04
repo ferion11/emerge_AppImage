@@ -1,4 +1,4 @@
-name: wine-build-release
+name: emerge-build-release
 
 on:
   push:
