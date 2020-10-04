@@ -41,6 +41,8 @@ mkdir -p ${WORKDIR}/var/db/repos/gentoo
 mkdir -p ${WORKDIR}/var/cache/distfiles
 mkdir -p ${WORKDIR}/var/cache/binpkgs
 
+rm -rf ${WORKDIR}/var/log
+mkdir -p ${WORKDIR}/var/log
 #=================================================
 
 wget -nv -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" -O  appimagetool.AppImage

@@ -22,15 +22,16 @@ check_commands() {
 check_commands mount umount chroot
 #=================================================
 function cleanup {
-	umount ${HERE}/var/cache/binpkgs
-	umount ${HERE}/var/cache/distfiles
-	umount ${HERE}/var/db/repos/gentoo
+	umount -f ${HERE}/var/log
+	umount -f ${HERE}/var/cache/binpkgs
+	umount -f ${HERE}/var/cache/distfiles
+	umount -f ${HERE}/var/db/repos/gentoo
 
-	umount ${HERE}/mnt/host
+	umount -f ${HERE}/mnt/host
 
-	umount ${HERE}/sys
-	umount ${HERE}/proc
-	umount ${HERE}/dev
+	umount -f ${HERE}/sys
+	umount -f ${HERE}/proc
+	umount -f ${HERE}/dev
 }
 #-------
 trap cleanup EXIT
@@ -44,6 +45,7 @@ mount --rbind / ${HERE}/mnt/host
 mount --rbind /var/db/repos/gentoo ${HERE}/var/db/repos/gentoo
 mount --rbind /var/cache/distfiles ${HERE}/var/cache/distfiles
 mount --rbind /var/cache/binpkgs ${HERE}/var/cache/binpkgs
+mount --rbind /var/log ${HERE}/var/log
 #=================================================
 chroot ${HERE} ./emerge.sh $@
 #=================================================
