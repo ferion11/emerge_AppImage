@@ -22,36 +22,36 @@ check_commands() {
 check_commands mount umount chroot
 #=================================================
 function cleanup {
-	umount -f ${HERE}/usr/tmp
-	umount -f ${HERE}/var/tmp
-	umount -f ${HERE}/tmp
-	umount -f ${HERE}/var/log
-	umount -f ${HERE}/var/cache/binpkgs
-	umount -f ${HERE}/var/cache/distfiles
-	umount -f ${HERE}/var/db/repos
+	umount -f "${HERE}/lib/modules"
+	umount -f "${HERE}/usr/src/linux"
+	umount -f "${HERE}/dev/pts"
+	umount -f "${HERE}/run"
 
-	umount -f ${HERE}/mnt/host
+	umount -f "${HERE}/tmp"
+	umount -f "${HERE}/var"
 
-	umount -f ${HERE}/sys
-	umount -f ${HERE}/proc
-	umount -f ${HERE}/dev
+	umount -f "${HERE}/mnt/host"
+
+	umount -f "${HERE}/sys"
+	umount -f "${HERE}/proc"
+	umount -f "${HERE}/dev"
 }
 #-------
 trap cleanup EXIT
 #=================================================
-mount --rbind /dev ${HERE}/dev
-mount --rbind /proc ${HERE}/proc
-mount --rbind /sys ${HERE}/sys
+mount --rbind /dev "${HERE}/dev"
+mount --rbind /proc "${HERE}/proc"
+mount --rbind /sys "${HERE}/sys"
 
-mount --rbind / ${HERE}/mnt/host
+mount --rbind / "${HERE}/mnt/host"
 
-mount --rbind /var/db/repos ${HERE}/var/db/repos
-mount --rbind /var/cache/distfiles ${HERE}/var/cache/distfiles
-mount --rbind /var/cache/binpkgs ${HERE}/var/cache/binpkgs
-mount --rbind /var/log ${HERE}/var/log
-mount --rbind /tmp ${HERE}/tmp
-mount --rbind /var/tmp ${HERE}/var/tmp
-mount --rbind /usr/tmp ${HERE}/usr/tmp
+mount --rbind /var "${HERE}/var"
+mount --rbind /tmp "${HERE}/tmp"
+
+mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE}/run"
+mount -o bind /dev/pts "${HERE}/dev/pts"
+mount -o bind /usr/src/linux "${HERE}/usr/src/linux"
+mount -o bind /lib/modules "${HERE}/lib/modules"
 #=================================================
 chroot ${HERE} ./emerge.sh $@
 #=================================================
