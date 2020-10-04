@@ -6,3 +6,4 @@
 $ chmod +x emerge-{VERSION}.AppImage
 $ ./emerge-{VERSION}.AppImage -pv sys-apps/portage
 ```
+* Note that the options `--root=/mnt/host --config-root=/mnt/host` are already included internally.
