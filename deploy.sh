@@ -8,7 +8,7 @@ echo "STAGE3_FILENAME: ${STAGE3_FILENAME}"
 echo "STAGE3_NAME: ${STAGE3_NAME}"
 echo "NAME format: emerge-${STAGE3_NAME}.AppImage"
 
-WORKDIR="workdir"
+WORKDIR="/tmp/workdir"
 #=================================================
 die() { echo >&2 "$*"; exit 1; };
 #=================================================
