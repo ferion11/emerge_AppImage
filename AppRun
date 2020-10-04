@@ -25,7 +25,7 @@ function cleanup {
 	umount -f ${HERE}/var/log
 	umount -f ${HERE}/var/cache/binpkgs
 	umount -f ${HERE}/var/cache/distfiles
-	umount -f ${HERE}/var/db/repos/gentoo
+	umount -f ${HERE}/var/db/repos
 
 	umount -f ${HERE}/mnt/host
 
@@ -42,7 +42,7 @@ mount --rbind /sys ${HERE}/sys
 
 mount --rbind / ${HERE}/mnt/host
 
-mount --rbind /var/db/repos/gentoo ${HERE}/var/db/repos/gentoo
+mount --rbind /var/db/repos ${HERE}/var/db/repos
 mount --rbind /var/cache/distfiles ${HERE}/var/cache/distfiles
 mount --rbind /var/cache/binpkgs ${HERE}/var/cache/binpkgs
 mount --rbind /var/log ${HERE}/var/log

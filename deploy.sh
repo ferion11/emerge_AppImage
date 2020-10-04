@@ -37,7 +37,7 @@ EOF
 
 chmod +x "${WORKDIR}"/emerge.sh
 
-mkdir -p ${WORKDIR}/var/db/repos/gentoo
+mkdir -p ${WORKDIR}/var/db/repos
 mkdir -p ${WORKDIR}/var/cache/distfiles
 mkdir -p ${WORKDIR}/var/cache/binpkgs
 
