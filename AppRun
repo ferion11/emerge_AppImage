@@ -22,6 +22,9 @@ check_commands() {
 check_commands mount umount chroot
 #=================================================
 function cleanup {
+	umount -f ${HERE}/usr/tmp
+	umount -f ${HERE}/var/tmp
+	umount -f ${HERE}/tmp
 	umount -f ${HERE}/var/log
 	umount -f ${HERE}/var/cache/binpkgs
 	umount -f ${HERE}/var/cache/distfiles
@@ -46,6 +49,9 @@ mount --rbind /var/db/repos ${HERE}/var/db/repos
 mount --rbind /var/cache/distfiles ${HERE}/var/cache/distfiles
 mount --rbind /var/cache/binpkgs ${HERE}/var/cache/binpkgs
 mount --rbind /var/log ${HERE}/var/log
+mount --rbind /tmp ${HERE}/tmp
+mount --rbind /var/tmp ${HERE}/var/tmp
+mount --rbind /usr/tmp ${HERE}/usr/tmp
 #=================================================
 chroot ${HERE} ./emerge.sh $@
 #=================================================
