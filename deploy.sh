@@ -8,7 +8,7 @@ echo "STAGE3_FILENAME: ${STAGE3_FILENAME}"
 echo "STAGE3_NAME: ${STAGE3_NAME}"
 echo "NAME format: emerge-${STAGE3_NAME}.AppImage"
 
-WORKDIR="/tmp/workdir"
+WORKDIR="workdir"
 #=================================================
 die() { echo >&2 "$*"; exit 1; };
 #=================================================
@@ -17,9 +17,9 @@ mkdir "${WORKDIR}"
 
 # Get stage3:
 echo "Downloading ${STAGE3_FILENAME} ..."
-wget -q "${STAGE3_URL}"
+wget -c "${STAGE3_URL}"
 
-tar xf ${STAGE3_FILENAME} -C "${WORKDIR}"/ || die "* Cannot extract ${STAGE3_FILENAME}!"
+tar xf ${STAGE3_FILENAME} -C "${WORKDIR}"/
 
 mkdir -p ${WORKDIR}/mnt/host
 
