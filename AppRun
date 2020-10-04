@@ -1,0 +1,50 @@
+#!/bin/bash -e
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+if [ "$(id -u)" != 0 ]; then
+	echo "* This AppImage need to be run with root!"
+	exit 1
+fi
+#=================================================
+have_dep() {
+	command -v "$1" >/dev/null 2>&1
+}
+check_commands() {
+	for cmd in "$@"; do
+		if have_dep "${cmd}"; then
+			echo "* command ${cmd} is installed!"
+		else
+			echo "* Your system does not have the command: ${cmd}. Please install it!"
+			exit 1
+		fi
+	done
+}
+check_commands mount umount chroot
+#=================================================
+function cleanup {
+	umount ${HERE}/var/cache/binpkgs
+	umount ${HERE}/var/cache/distfiles
+	umount ${HERE}/var/db/repos/gentoo
+
+	umount ${HERE}/mnt/host
+
+	umount ${HERE}/sys
+	umount ${HERE}/proc
+	umount ${HERE}/dev
+}
+#-------
+trap cleanup EXIT
+#=================================================
+mount --rbind /dev ${HERE}/dev
+mount --rbind /proc ${HERE}/proc
+mount --rbind /sys ${HERE}/sys
+
+mount --rbind / ${HERE}/mnt/host
+
+mount --rbind /var/db/repos/gentoo ${HERE}/var/db/repos/gentoo
+mount --rbind /var/cache/distfiles ${HERE}/var/cache/distfiles
+mount --rbind /var/cache/binpkgs ${HERE}/var/cache/binpkgs
+#=================================================
+chroot ${HERE} ./emerge.sh $@
+#=================================================
+exit 0

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=emerge
+GenericName=Emerge with its own stage3
+Comment=A command line interface to the Portage system
+Exec=AppRun
+Icon=emerge
+Type=Application
+Categories=System;
+Name[en_US]=Emerge
