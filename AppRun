@@ -1,5 +1,6 @@
 #!/bin/bash -e
-HERE="$(dirname "$(readlink -f "${0}")")"
+HERE_RO="$(dirname "$(readlink -f "${0}")")"
+HERE_RW="${HERE_RO}_rw"
 
 if [ "$(id -u)" != 0 ]; then
 	echo "* This AppImage need to be run with root!"
@@ -18,46 +19,49 @@ check_commands() {
 	done
 }
 check_commands chroot mount umount unionfs
+
+#TODO!!!: check kernel support for mount squashfs, unionfs, chroot...
 #=================================================
 function cleanup {
-	umount -f "${HERE}/lib/modules"
-	umount -f "${HERE}/usr/src/linux"
-	umount -f "${HERE}/dev/pts"
-	umount -f "${HERE}/run"
+	umount -f "${HERE_RW}/lib/modules"
+	umount -f "${HERE_RW}/usr/src/linux"
+	umount -f "${HERE_RW}/dev/pts"
+	umount -f "${HERE_RW}/run"
 
-	umount -f "${HERE}/tmp"
-	umount -f "${HERE}/var/log"
-	umount -f "${HERE}/var/cache/binpkgs"
-	umount -f "${HERE}/var/cache/distfiles"
-	umount -f "${HERE}/var/db/repos"
+	umount -f "${HERE_RW}/var/log"
+	umount -f "${HERE_RW}/var/cache/binpkgs"
+	umount -f "${HERE_RW}/var/cache/distfiles"
+	umount -f "${HERE_RW}/var/db/repos"
 
-	umount -f "${HERE}/mnt/host"
+	umount -f "${HERE_RW}/mnt/host"
 
-	umount -f "${HERE}/proc"
-	umount -f "${HERE}/sys"
-	umount -f "${HERE}/dev"
+	umount -f "${HERE_RW}/proc"
+	umount -f "${HERE_RW}/sys"
+	umount -f "${HERE_RW}/dev"
+
+	rm -rf "${HERE_RW}"
 }
 #-------
 trap cleanup EXIT
 #-------
+mkdir -p "${HERE_RW}"
 #=================================================
-mount --rbind /dev "${HERE}/dev"
-mount --rbind /sys "${HERE}/sys"
-mount -t proc none "${HERE}/proc"
+mount --rbind /dev "${HERE_RW}/dev"
+mount --rbind /sys "${HERE_RW}/sys"
+mount -t proc none "${HERE_RW}/proc"
 
-mount --rbind / "${HERE}/mnt/host"
+mount --rbind / "${HERE_RW}/mnt/host"
 
-mount -o bind,rw /var/db/repos "${HERE}/var/db/repos"
-mount -o bind,rw /var/cache/distfiles "${HERE}/var/cache/distfiles"
-mount -o bind,rw /var/cache/binpkgs "${HERE}/var/cache/binpkgs"
-mount -o bind,rw /var/log "${HERE}/var/log"
-mount -o bind,rw /tmp "${HERE}/tmp"
+mount -o bind,rw /var/db/repos "${HERE_RW}/var/db/repos"
+mount -o bind,rw /var/cache/distfiles "${HERE_RW}/var/cache/distfiles"
+mount -o bind,rw /var/cache/binpkgs "${HERE_RW}/var/cache/binpkgs"
+mount -o bind,rw /var/log "${HERE_RW}/var/log"
 
-mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE}/run"
-mount -o bind,rw /dev/pts "${HERE}/dev/pts"
-mount -o bind,rw /usr/src/linux "${HERE}/usr/src/linux"
-mount -o bind,rw /lib/modules "${HERE}/lib/modules"
+mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE_RW}/run"
+mount -o bind,rw /dev/pts "${HERE_RW}/dev/pts"
+mount -o bind,rw /usr/src/linux "${HERE_RW}/usr/src/linux"
+mount -o bind,rw /lib/modules "${HERE_RW}/lib/modules"
 #=================================================
-chroot ${HERE} ./emerge.sh $@
+chroot ${HERE_RW} ./emerge.sh $@
 #=================================================
 exit 0
