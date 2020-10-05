@@ -1,6 +1,5 @@
 #!/bin/bash
-
-export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20201001T120249Z/stage3-amd64-20201001T120249Z.tar.xz"
+export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20201004T214503Z/stage3-amd64-20201004T214503Z.tar.xz"
 export STAGE3_FILENAME="${STAGE3_URL##*/}"
 export STAGE3_NAME="${STAGE3_FILENAME%???????}"
 
