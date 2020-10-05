@@ -11,15 +11,13 @@ have_dep() {
 }
 check_commands() {
 	for cmd in "$@"; do
-		if have_dep "${cmd}"; then
-			echo "* command ${cmd} is installed!"
-		else
+		if ! have_dep "${cmd}"; then
 			echo "* Your system does not have the command: ${cmd}. Please install it!"
 			exit 1
 		fi
 	done
 }
-check_commands mount umount chroot
+check_commands chroot mount umount unionfs
 #=================================================
 function cleanup {
 	umount -f "${HERE}/lib/modules"
@@ -32,26 +30,27 @@ function cleanup {
 
 	umount -f "${HERE}/mnt/host"
 
-	umount -f "${HERE}/sys"
 	umount -f "${HERE}/proc"
+	umount -f "${HERE}/sys"
 	umount -f "${HERE}/dev"
 }
 #-------
 trap cleanup EXIT
+#-------
 #=================================================
 mount --rbind /dev "${HERE}/dev"
-mount --rbind /proc "${HERE}/proc"
 mount --rbind /sys "${HERE}/sys"
+mount -t proc none "${HERE}/proc"
 
 mount --rbind / "${HERE}/mnt/host"
 
-mount --rbind /var "${HERE}/var"
-mount --rbind /tmp "${HERE}/tmp"
+mount -o bind,rw /var "${HERE}/var"
+mount -o bind,rw /tmp "${HERE}/tmp"
 
 mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE}/run"
-mount -o bind /dev/pts "${HERE}/dev/pts"
-mount -o bind /usr/src/linux "${HERE}/usr/src/linux"
-mount -o bind /lib/modules "${HERE}/lib/modules"
+mount -o bind,rw /dev/pts "${HERE}/dev/pts"
+mount -o bind,rw /usr/src/linux "${HERE}/usr/src/linux"
+mount -o bind,rw /lib/modules "${HERE}/lib/modules"
 #=================================================
 chroot ${HERE} ./emerge.sh $@
 #=================================================
