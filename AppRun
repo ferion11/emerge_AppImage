@@ -1,6 +1,8 @@
 #!/bin/bash -e
 HERE_RO="$(dirname "$(readlink -f "${0}")")"
 HERE_RW="${HERE_RO}_rw"
+HERE_UPPER="${HERE_RO}_upper"
+HERE_TMP="${HERE_RO}_tmp"
 
 if [ "$(id -u)" != 0 ]; then
 	echo "* This AppImage need to be run with root!"
@@ -20,7 +22,8 @@ check_commands() {
 }
 check_commands chroot mount umount unionfs
 
-#TODO!!!: check kernel support for mount squashfs, unionfs, chroot...
+#TODO!!!: check kernel support for mount squashfs, OverlayFS, chroot...
+# https://wiki.gentoo.org/wiki/OverlayFS
 #=================================================
 function cleanup {
 	umount -f "${HERE_RW}/lib/modules"
@@ -39,13 +42,20 @@ function cleanup {
 	umount -f "${HERE_RW}/sys"
 	umount -f "${HERE_RW}/dev"
 
+	umount -f "${HERE_RW}"
 	rm -rf "${HERE_RW}"
+	rm -rf "${HERE_UPPER}"
+	rm -rf "${HERE_TMP}"
 }
 #-------
 trap cleanup EXIT
 #-------
+mkdir -p "${HERE_TMP}"
+mkdir -p "${HERE_UPPER}"
 mkdir -p "${HERE_RW}"
 #=================================================
+mount -t overlay overlay -o lowerdir="${HERE_RO}",upperdir="${HERE_UPPER}",workdir="${HERE_TMP}" "${HERE_RW}"
+
 mount --rbind /dev "${HERE_RW}/dev"
 mount --rbind /sys "${HERE_RW}/sys"
 mount -t proc none "${HERE_RW}/proc"
@@ -62,6 +72,6 @@ mount -o bind,rw /dev/pts "${HERE_RW}/dev/pts"
 mount -o bind,rw /usr/src/linux "${HERE_RW}/usr/src/linux"
 mount -o bind,rw /lib/modules "${HERE_RW}/lib/modules"
 #=================================================
-chroot ${HERE_RW} ./emerge.sh $@
+chroot "${HERE_RW}" ./emerge.sh $@
 #=================================================
 exit 0
