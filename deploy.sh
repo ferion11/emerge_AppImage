@@ -16,7 +16,7 @@ mkdir "${WORKDIR}"
 
 # Get stage3:
 echo "Downloading ${STAGE3_FILENAME} ..."
-wget -c "${STAGE3_URL}"
+wget -q "${STAGE3_URL}"
 
 tar xf ${STAGE3_FILENAME} -C "${WORKDIR}"/
 
@@ -48,7 +48,7 @@ mkdir -p ${WORKDIR}/usr/src/linux
 mkdir -p ${WORKDIR}/lib/modules
 #=================================================
 
-wget -nv -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" -O  appimagetool.AppImage
+wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" -O  appimagetool.AppImage
 
 chmod +x appimagetool.AppImage
 
