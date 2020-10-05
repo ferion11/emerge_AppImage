@@ -4,9 +4,11 @@ HERE_RW="${HERE_RO}_rw"
 HERE_UPPER="${HERE_RO}_upper"
 HERE_TMP="${HERE_RO}_tmp"
 
+#=================================================
+die() { echo >&2 "$*"; exit 1; };
+
 if [ "$(id -u)" != 0 ]; then
-	echo "* This AppImage need to be run with root!"
-	exit 1
+	die "* This AppImage need to be run with root!"
 fi
 #=================================================
 have_dep() {
@@ -15,15 +17,11 @@ have_dep() {
 check_commands() {
 	for cmd in "$@"; do
 		if ! have_dep "${cmd}"; then
-			echo "* Your system does not have the command: ${cmd}. Please install it!"
-			exit 1
+			die "* Your system does not have the command: ${cmd}. Please install it!"
 		fi
 	done
 }
-check_commands chroot mount umount unionfs
-
-#TODO!!!: check kernel support for mount squashfs, OverlayFS, chroot...
-# https://wiki.gentoo.org/wiki/OverlayFS
+check_commands chroot mount umount
 #=================================================
 function cleanup {
 	umount -f "${HERE_RW}/lib/modules"
@@ -54,23 +52,23 @@ mkdir -p "${HERE_TMP}"
 mkdir -p "${HERE_UPPER}"
 mkdir -p "${HERE_RW}"
 #=================================================
-mount -t overlay overlay -o lowerdir="${HERE_RO}",upperdir="${HERE_UPPER}",workdir="${HERE_TMP}" "${HERE_RW}"
+mount -t overlay overlay -o lowerdir="${HERE_RO}",upperdir="${HERE_UPPER}",workdir="${HERE_TMP}" "${HERE_RW}" || die "* Cant mount using OverlayFS"
 
-mount --rbind /dev "${HERE_RW}/dev"
-mount --rbind /sys "${HERE_RW}/sys"
-mount -t proc none "${HERE_RW}/proc"
+mount --rbind /dev "${HERE_RW}/dev" || die "* Cant mount dev"
+mount --rbind /sys "${HERE_RW}/sys" || die "* Cant mount sys"
+mount -t proc none "${HERE_RW}/proc" || die "* Cant mount proc"
 
-mount --rbind / "${HERE_RW}/mnt/host"
+mount --rbind / "${HERE_RW}/mnt/host"  || die "* Cant mount host"
 
-mount -o bind,rw /var/db/repos "${HERE_RW}/var/db/repos"
-mount -o bind,rw /var/cache/distfiles "${HERE_RW}/var/cache/distfiles"
-mount -o bind,rw /var/cache/binpkgs "${HERE_RW}/var/cache/binpkgs"
-mount -o bind,rw /var/log "${HERE_RW}/var/log"
+mount -o bind,rw /var/db/repos "${HERE_RW}/var/db/repos"  || die "* Cant mount var/db/repos"
+mount -o bind,rw /var/cache/distfiles "${HERE_RW}/var/cache/distfiles" || die "* Cant mount var/cache/distfiles"
+mount -o bind,rw /var/cache/binpkgs "${HERE_RW}/var/cache/binpkgs" || die "* Cant mount var/cache/binpkgs"
+mount -o bind,rw /var/log "${HERE_RW}/var/log" || die "* Cant mount car/logs"
 
-mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE_RW}/run"
-mount -o bind,rw /dev/pts "${HERE_RW}/dev/pts"
-mount -o bind,rw /usr/src/linux "${HERE_RW}/usr/src/linux"
-mount -o bind,rw /lib/modules "${HERE_RW}/lib/modules"
+mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE_RW}/run" || die "* Cant mount run"
+mount -o bind,rw /dev/pts "${HERE_RW}/dev/pts" || die "* Cant mount dev/pts"
+mount -o bind,rw /usr/src/linux "${HERE_RW}/usr/src/linux" || die "* Cant mount usr/src/linux"
+mount -o bind,rw /lib/modules "${HERE_RW}/lib/modules" || die "* Cant mount lib/modules"
 #=================================================
 chroot "${HERE_RW}" ./emerge.sh $@
 #=================================================
