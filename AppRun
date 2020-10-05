@@ -24,23 +24,23 @@ check_commands() {
 check_commands chroot mount umount
 #=================================================
 function cleanup {
-	umount -f "${HERE_RW}/lib/modules"
-	umount -f "${HERE_RW}/usr/src/linux"
-	umount -f "${HERE_RW}/dev/pts"
-	umount -f "${HERE_RW}/run"
+	umount -l "${HERE_RW}/lib/modules"
+	umount -l "${HERE_RW}/usr/src/linux"
+	umount -l "${HERE_RW}/dev/pts"
+	umount -l "${HERE_RW}/run"
 
-	umount -f "${HERE_RW}/var/log"
-	umount -f "${HERE_RW}/var/cache/binpkgs"
-	umount -f "${HERE_RW}/var/cache/distfiles"
-	umount -f "${HERE_RW}/var/db/repos"
+	umount -l "${HERE_RW}/var/log"
+	umount -l "${HERE_RW}/var/cache/binpkgs"
+	umount -l "${HERE_RW}/var/cache/distfiles"
+	umount -l "${HERE_RW}/var/db/repos"
 
-	umount -f "${HERE_RW}/mnt/host"
+	umount -l "${HERE_RW}/mnt/host"
 
-	umount -f "${HERE_RW}/proc"
-	umount -f "${HERE_RW}/sys"
-	umount -f "${HERE_RW}/dev"
+	umount -l "${HERE_RW}/proc"
+	umount -l "${HERE_RW}/sys"
+	umount -l "${HERE_RW}/dev"
 
-	umount -f "${HERE_RW}"
+	umount -l "${HERE_RW}"
 	rm -rf "${HERE_RW}"
 	rm -rf "${HERE_UPPER}"
 	rm -rf "${HERE_TMP}"
