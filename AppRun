@@ -26,10 +26,10 @@ function cleanup {
 	umount -f "${HERE}/run"
 
 	umount -f "${HERE}/tmp"
-	umount -f "${HERE}/var/binpkgs"
 	umount -f "${HERE}/var/log"
-	umount -f "${HERE}/var/distfiles"
-	umount -f "${HERE}/var/repos"
+	umount -f "${HERE}/var/cache/binpkgs"
+	umount -f "${HERE}/var/cache/distfiles"
+	umount -f "${HERE}/var/db/repos"
 
 	umount -f "${HERE}/mnt/host"
 
@@ -47,10 +47,10 @@ mount -t proc none "${HERE}/proc"
 
 mount --rbind / "${HERE}/mnt/host"
 
-mount -o bind,rw /var/repos "${HERE}/var/repos"
-mount -o bind,rw /var/distfiles "${HERE}/var/distfiles"
+mount -o bind,rw /var/db/repos "${HERE}/var/db/repos"
+mount -o bind,rw /var/cache/distfiles "${HERE}/var/cache/distfiles"
+mount -o bind,rw /var/cache/binpkgs "${HERE}/var/cache/binpkgs"
 mount -o bind,rw /var/log "${HERE}/var/log"
-mount -o bind,rw /var/binpkgs "${HERE}/var/binpkgs"
 mount -o bind,rw /tmp "${HERE}/tmp"
 
 mount -t tmpfs -o nosuid,nodev,noexec,mode=755 none "${HERE}/run"
