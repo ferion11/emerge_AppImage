@@ -38,8 +38,12 @@ EOF
 
 chmod +x "${WORKDIR}"/emerge.sh
 
-rm -rf ${WORKDIR}/var
-mkdir -p ${WORKDIR}/var
+mkdir -p ${WORKDIR}/var/db/repos
+mkdir -p ${WORKDIR}/var/cache/distfiles
+mkdir -p ${WORKDIR}/var/cache/binpkgs
+
+rm -rf ${WORKDIR}/var/log
+mkdir -p ${WORKDIR}/var/log
 
 mkdir -p ${WORKDIR}/usr/src/linux
 mkdir -p ${WORKDIR}/lib/modules
