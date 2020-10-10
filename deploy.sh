@@ -1,8 +1,12 @@
 #!/bin/bash
-export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20201007T214504Z/stage3-amd64-20201007T214504Z.tar.xz"
+LATEST_STAGE3="$(wget --quiet http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64.txt -O-| tail -n 1 | cut -d " " -f 1)"
+
+#export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20201007T214504Z/stage3-amd64-20201007T214504Z.tar.xz"
+export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/${LATEST_STAGE3}"
 export STAGE3_FILENAME="${STAGE3_URL##*/}"
 export STAGE3_NAME="${STAGE3_FILENAME%???????}"
 
+echo "STAGE3_URL: ${STAGE3_URL}"
 echo "STAGE3_FILENAME: ${STAGE3_FILENAME}"
 echo "STAGE3_NAME: ${STAGE3_NAME}"
 echo "NAME format: emerge-${STAGE3_NAME}.AppImage"
