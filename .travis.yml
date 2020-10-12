@@ -34,6 +34,8 @@ after_success:
       export UPLOADTOOL_BODY="Instructions on using the AppImage can be found [here](https://github.com/${TRAVIS_REPO_SLUG}/blob/main/README.md)\n\nThis is the ***$UPLOADTOOL_SUFFIX experimental build*** for testing new features.\n\nTravis CI build log: $TRAVIS_BUILD_WEB_URL"
       bash upload.sh result/*
     elif [[ "$TRAVIS_BRANCH" != "$TRAVIS_TAG" ]]; then
+      echo 'Removing old continuous release first...'
+      curl -XDELETE --header "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/ferion11/emerge_AppImage/releases/continuous"
       echo 'Publishing release to GitHub...'
       export UPLOADTOOL_BODY="Instructions on using the AppImage can be found [here](https://github.com/${TRAVIS_REPO_SLUG}/blob/main/README.md)\n\nThis is the ***latest development build***.\n\nTravis CI build log: $TRAVIS_BUILD_WEB_URL"
       bash upload.sh result/*
