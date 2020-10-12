@@ -1,14 +1,14 @@
 name: emerge-build-continuous
 
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
-#  schedule:
-#    - cron: '0 0 * * *'  # every day at midnight
+  schedule:
+    - cron: '0 0 * * *'  # every day at midnight
+#  push:
+#    branches:
+#      - 'main'
+#  pull_request:
+#    branches:
+#      - 'main'
 
 jobs:
   build:
