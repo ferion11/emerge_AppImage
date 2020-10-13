@@ -2,7 +2,7 @@ name: build-continuous-schedule
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # every day at midnight
+    - cron: '0 5 * * *'  # every day at 05:00
 
 jobs:
   build:
