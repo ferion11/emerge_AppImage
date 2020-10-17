@@ -14,7 +14,7 @@ echo "NAME format: emerge-${STAGE3_NAME}.AppImage"
 # check if is the same build, and avoid rebuild:
 wget -q https://github.com/ferion11/emerge_AppImage/releases/download/continuous-main/MD5SUMS
 IS_THE_SAME="$(cat MD5SUMS | grep "${STAGE3_NAME}")"
-[ -n "${IS_THE_SAME}" ] && exit 0
+[ -n "${IS_THE_SAME}" ] && exit 1
 rm -rf MD5SUMS
 
 WORKDIR="workdir"
