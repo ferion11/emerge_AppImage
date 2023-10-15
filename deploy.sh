@@ -1,5 +1,5 @@
 #!/bin/bash
-LATEST_STAGE3="$(wget --quiet http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt -O-| tail -n 1 | cut -d " " -f 1)"
+LATEST_STAGE3="$(wget --quiet http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt -O- | grep tar.xz | cut -d " " -f 1)"
 
 #export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20210722T095939Z/stage3-amd64-openrc-20210722T095939Z.tar.xz"
 export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/${LATEST_STAGE3}"
