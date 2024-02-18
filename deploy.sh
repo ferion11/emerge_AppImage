@@ -2,7 +2,8 @@
 LATEST_STAGE3="$(wget --quiet http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt -O- | grep tar.xz | cut -d " " -f 1)"
 
 #export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20210722T095939Z/stage3-amd64-openrc-20210722T095939Z.tar.xz"
-export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/${LATEST_STAGE3}"
+#export STAGE3_URL="https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/${LATEST_STAGE3}"
+export STAGE3_URL="http://gentoo-mirror.flux.utah.edu/releases/amd64/autobuilds//${LATEST_STAGE3}"
 export STAGE3_FILENAME="${STAGE3_URL##*/}"
 export STAGE3_NAME="${STAGE3_FILENAME%???????}"
 
@@ -11,11 +12,14 @@ echo "STAGE3_FILENAME: ${STAGE3_FILENAME}"
 echo "STAGE3_NAME: ${STAGE3_NAME}"
 echo "NAME format: emerge-${STAGE3_NAME}.AppImage"
 
+#exit 0
+
 # check if is the same build, and avoid rebuild:
 wget -q https://github.com/ferion11/emerge_AppImage/releases/download/continuous-main/MD5SUMS
 IS_THE_SAME="$(cat MD5SUMS | grep "${STAGE3_NAME}")"
 [ -n "${IS_THE_SAME}" ] && exit 1
 rm -rf MD5SUMS
+
 
 WORKDIR="workdir"
 #=================================================
